@@ -156,6 +156,10 @@ func (l *linuxStandardInit) Init() error {
 		}
 	}
 
+	if err := unix.Prctl(unix.PR_SET_MEMORY_MERGE, 1, 0, 0, 0); err != nil {
+		return &os.SyscallError{Syscall: "prctl(PR_SET_MEMORY_MERGE)", Err: err}
+	}
+
 	if l.config.Config.Scheduler != nil {
 		if err := setupScheduler(l.config.Config); err != nil {
 			return err
